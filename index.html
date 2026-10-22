@@ -99,6 +99,34 @@ header .logo i{animation:bar 3s ease-in-out infinite;transform-origin:left}
 .qris-box b{color:var(--ink)}
 .qris-box .dl{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:10px 18px;border:0;border-radius:999px;background:var(--o);color:#1f3d2b;font:inherit;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.15)}
 .qris-box .dl:active{transform:scale(.96)}
+/* === Tombol & panel Penerjemah (tambahan, terpisah dari fitur lain) === */
+#atrBtn{position:fixed;right:calc(12px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:60;width:46px;height:46px;padding:0;border:2px solid var(--o);border-radius:50%;background:var(--g);color:#fff;font:900 15px/1 Lato,system-ui,sans-serif;letter-spacing:-1px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+#atrBtn:focus-visible{outline:3px solid var(--o);outline-offset:2px}
+#atrRoot[hidden]{display:none}
+#atrRoot,#atrRoot *{box-sizing:border-box}
+#atrRoot{position:fixed;inset:0;z-index:70;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.5);font:16px/1.45 Lato,system-ui,sans-serif;color:var(--ink)}
+#atrRoot .atr-p{width:100%;max-width:560px;max-height:92%;overflow-y:auto;background:var(--card);border-radius:18px 18px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom,0px));border:1px solid var(--line)}
+#atrRoot .atr-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+#atrRoot .atr-h b{font-size:18px;font-weight:900}
+#atrRoot .atr-x{width:36px;height:36px;border:1px solid var(--line);border-radius:50%;background:var(--bg);color:var(--ink);font-size:20px;line-height:1;cursor:pointer;padding:0}
+#atrRoot .atr-tabs{display:flex;gap:8px;margin-bottom:8px}
+#atrRoot .atr-tab{flex:1;padding:10px 6px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:700 14px Lato,system-ui,sans-serif;cursor:pointer}
+#atrRoot .atr-tab.on{background:var(--g);border-color:var(--g);color:#fff}
+#atrRoot label{display:block;margin:8px 0 4px;font:700 13px Lato,system-ui,sans-serif;color:var(--mut)}
+#atrRoot select,#atrRoot input,#atrRoot textarea{width:100%;padding:10px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:16px/1.4 Lato,system-ui,sans-serif}
+#atrRoot textarea{min-height:96px;resize:vertical}
+#atrRoot .atr-row{display:flex;gap:8px;margin-top:10px}
+#atrRoot .atr-row>button{flex:1}
+#atrRoot .atr-b{padding:11px 6px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:700 14px Lato,system-ui,sans-serif;cursor:pointer}
+#atrRoot .atr-b.pri{background:var(--g);border-color:var(--g);color:#fff}
+#atrRoot .atr-b.wa{background:#1fa855;border-color:#1fa855;color:#fff}
+#atrRoot .atr-b:disabled{opacity:.5}
+#atrRoot .atr-box{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+#atrRoot .atr-out{white-space:pre-wrap;min-height:44px;font-size:17px;line-height:1.45}
+#atrRoot .atr-py{margin-top:6px;color:var(--o);font-size:15px}
+#atrRoot .atr-bk{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:14px;color:var(--mut)}
+#atrRoot .atr-st{min-height:1.2em;margin-top:6px;font-size:13px;color:var(--mut)}
+#atrRoot .atr-note{margin-top:8px;font-size:12px;color:var(--mut);text-align:center}
 </style>
 </head>
 <body>
@@ -556,6 +584,139 @@ else{a.pause();set(false)}
 a.addEventListener("play",function(){set(true)});
 a.addEventListener("pause",function(){set(false)});
 var p=a.play();if(p&&p.then)p.then(function(){set(true);unbind()}).catch(function(){set(false)});
+})();
+</script>
+<!-- Penerjemah ABY (tambahan) -->
+<button type="button" id="atrBtn" aria-label="Buka penerjemah" title="Penerjemah">文A</button>
+<div id="atrRoot" hidden role="dialog" aria-modal="true" aria-label="Penerjemah ABY">
+<div class="atr-p">
+  <div class="atr-h"><b>Penerjemah</b><button type="button" class="atr-x" id="atrClose" aria-label="Tutup">×</button></div>
+  <div class="atr-tabs">
+    <button type="button" class="atr-tab on" id="atrT1">Saya → Pelanggan</button>
+    <button type="button" class="atr-tab" id="atrT2">Pelanggan → Saya</button>
+  </div>
+  <div id="atrLangBox">
+    <label for="atrLang">Bahasa pelanggan</label>
+    <select id="atrLang"></select>
+  </div>
+  <label for="atrWa">No. WhatsApp pelanggan (opsional, awali kode negara)</label>
+  <input id="atrWa" type="tel" inputmode="tel" placeholder="6281234567890">
+  <label for="atrSrc" id="atrSrcL">Tulis pesan (Indonesia)</label>
+  <textarea id="atrSrc" placeholder="Ketik atau tempel pesan di sini..."></textarea>
+  <div class="atr-row">
+    <button type="button" class="atr-b pri" id="atrGo">Terjemahkan</button>
+    <button type="button" class="atr-b" id="atrPaste">Tempel</button>
+    <button type="button" class="atr-b" id="atrClr">Hapus</button>
+  </div>
+  <div class="atr-box">
+    <label id="atrOutL">Hasil terjemahan</label>
+    <div class="atr-out" id="atrOut"></div>
+    <div class="atr-py" id="atrPy"></div>
+    <div class="atr-bk" id="atrBk" style="display:none"></div>
+    <div class="atr-st" id="atrSt"></div>
+    <div class="atr-row">
+      <button type="button" class="atr-b" id="atrCopy">Salin Hasil</button>
+      <button type="button" class="atr-b" id="atrBack">Cek Balik</button>
+      <button type="button" class="atr-b wa" id="atrSend">Buka WhatsApp</button>
+    </div>
+  </div>
+  <div class="atr-note">Terjemahan gratis (MyMemory). Perlu internet; hasil bisa kurang sempurna untuk kalimat panjang.</div>
+</div>
+</div>
+<script>
+(function(){
+var EMAIL="yokijk@yahoo.com";
+var LANGS=[["en","Inggris"],["zh-CN","Mandarin"],["es","Spanyol"],["fr","Prancis"],["ru","Rusia"],["ar","Arab"],["hi","India (Hindi)"],["ja","Jepang"],["ko","Korea"],["de","Jerman"],["nl","Belanda"],["ms","Melayu"]];
+var mode=1,$=function(i){return document.getElementById(i)};
+var sel=$("atrLang"),root=$("atrRoot"),pyLoaded=false;
+LANGS.forEach(function(l){var o=document.createElement("option");o.value=l[0];o.textContent=l[1];sel.appendChild(o)});
+try{var s=localStorage.getItem("atr_lang");if(s)sel.value=s;var w=localStorage.getItem("atr_wa");if(w)$("atrWa").value=w}catch(e){}
+
+function loadPy(){
+  if(pyLoaded)return;pyLoaded=true;
+  var sc=document.createElement("script");
+  sc.src="https://cdn.jsdelivr.net/npm/pinyin-pro@3.18.2/dist/index.js";
+  sc.async=true;document.head.appendChild(sc);
+}
+function open_(){root.hidden=false;loadPy();setTimeout(function(){$("atrSrc").focus()},50)}
+function close_(){root.hidden=true}
+$("atrBtn").onclick=open_;
+$("atrClose").onclick=close_;
+root.addEventListener("click",function(e){if(e.target===root)close_()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!root.hidden)close_()});
+
+function setMode(m){
+  mode=m;
+  $("atrT1").className="atr-tab"+(m==1?" on":"");
+  $("atrT2").className="atr-tab"+(m==2?" on":"");
+  $("atrSrcL").textContent=m==1?"Tulis pesan (Indonesia)":"Tempel pesan pelanggan (bahasa apa pun)";
+  $("atrOutL").textContent=m==1?"Hasil terjemahan (untuk pelanggan)":"Terjemahan (Indonesia)";
+  $("atrLangBox").style.display=m==1?"block":"none";
+  $("atrSend").style.display=m==1?"block":"none";
+  $("atrBack").style.display=m==1?"block":"none";
+  $("atrOut").textContent="";$("atrSt").textContent="";$("atrPy").textContent="";
+  $("atrBk").style.display="none";$("atrBk").textContent="";
+}
+$("atrT1").onclick=function(){setMode(1)};
+$("atrT2").onclick=function(){setMode(2)};
+
+function mm(q,pair){
+  return fetch("https://api.mymemory.translated.net/get?q="+encodeURIComponent(q)+"&langpair="+encodeURIComponent(pair)+"&de="+encodeURIComponent(EMAIL))
+  .then(function(r){return r.json()})
+  .then(function(d){
+    var t=d&&d.responseData&&d.responseData.translatedText;
+    if(!t||d.responseStatus&&d.responseStatus!=200){throw new Error((d&&d.responseDetails)||"gagal")}
+    return t;
+  });
+}
+
+$("atrGo").onclick=function(){
+  var q=$("atrSrc").value.trim();
+  if(!q){$("atrSt").textContent="Tulis pesan dulu.";return}
+  try{localStorage.setItem("atr_lang",sel.value);localStorage.setItem("atr_wa",$("atrWa").value)}catch(e){}
+  var pair=mode==1?("id|"+sel.value):("Autodetect|id");
+  $("atrGo").disabled=true;$("atrSt").textContent="Menerjemahkan...";$("atrOut").textContent="";$("atrPy").textContent="";
+  $("atrBk").style.display="none";$("atrBk").textContent="";
+  mm(q,pair).then(function(t){
+    $("atrOut").textContent=t;$("atrSt").textContent="Selesai.";
+    if(mode==1&&sel.value=="zh-CN"&&window.pinyinPro){try{$("atrPy").textContent="Pinyin: "+pinyinPro.pinyin(t,{toneType:"symbol"})}catch(e){}}
+  })
+  .catch(function(e){$("atrSt").textContent="Gagal: "+e.message+". Coba lagi atau persingkat teks."})
+  .then(function(){$("atrGo").disabled=false});
+};
+
+$("atrPaste").onclick=function(){
+  if(navigator.clipboard&&navigator.clipboard.readText){
+    navigator.clipboard.readText().then(function(t){$("atrSrc").value=t;if(mode==2&&t.trim())$("atrGo").click()}).catch(function(){$("atrSt").textContent="Izin clipboard ditolak. Tempel manual."});
+  }else{$("atrSt").textContent="Browser tidak mendukung. Tempel manual."}
+};
+$("atrClr").onclick=function(){$("atrSrc").value="";$("atrOut").textContent="";$("atrPy").textContent="";$("atrSt").textContent="";$("atrBk").style.display="none";$("atrBk").textContent=""};
+
+$("atrCopy").onclick=function(){
+  var t=$("atrOut").textContent;if(!t)return;
+  function fb(){var a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy");$("atrSt").textContent="Tersalin."}catch(e){$("atrSt").textContent="Gagal menyalin."}document.body.removeChild(a)}
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(function(){$("atrSt").textContent="Tersalin."}).catch(fb);
+  }else fb();
+};
+
+$("atrBack").onclick=function(){
+  var t=$("atrOut").textContent;if(!t){$("atrSt").textContent="Terjemahkan dulu.";return}
+  $("atrBack").disabled=true;$("atrSt").textContent="Mengecek balik...";
+  mm(t,sel.value+"|id").then(function(b){
+    $("atrBk").style.display="block";$("atrBk").textContent="Terjemah balik (cek): "+b;$("atrSt").textContent="Selesai.";
+  })
+  .catch(function(e){$("atrSt").textContent="Gagal: "+e.message})
+  .then(function(){$("atrBack").disabled=false});
+};
+
+$("atrSend").onclick=function(){
+  var t=$("atrOut").textContent;if(!t){$("atrSt").textContent="Terjemahkan dulu.";return}
+  var n=$("atrWa").value.replace(/\D/g,"");
+  if(n.indexOf("0")==0)n="62"+n.slice(1);
+  window.open("https://wa.me/"+n+"?text="+encodeURIComponent(t),"_blank");
+};
+setMode(1);
 })();
 </script>
 </body>
