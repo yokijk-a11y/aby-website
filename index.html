@@ -507,8 +507,9 @@ m+="Pembayaran: "+$("bayar").value+"\n";
 m+="Ketentuan: talangan maks. Rp100.000, selisihnya saya depositkan.\n";
 if($("besar").checked)m+="Belanjaan besar/rumit.\n";
 m+="\nMohon kirim estimasi totalnya. Terima kasih.";
-var fb=$("fb");fb.hidden=false;$("wa").href="https://wa.me/"+NO+"?text="+encodeURIComponent(m);$("pesan").value=m;
-fb.scrollIntoView({behavior:"smooth",block:"center"});try{$("wa").click()}catch(e){}};
+var fb=$("fb");var url="https://wa.me/"+NO+"?text="+encodeURIComponent(m);
+window.open(url,"_blank");
+};
 $("salin").onclick=function(){var p=$("pesan");p.select();p.setSelectionRange(0,99999);var ok=false;try{ok=document.execCommand("copy")}catch(e){}try{if(navigator.clipboard)navigator.clipboard.writeText(p.value);ok=true}catch(e){}$("salin").textContent=t(ok?"copied":"copyfail")};
 function applyLang(l){
 lang=D[l]?l:"id";
@@ -775,8 +776,8 @@ m+="\n";
 });
 if($("icat").value.trim())m+="\nNotes: "+$("icat").value.trim()+"\n";
 m+="\nPlease send me a cost estimate (items + international shipping). Thank you.";
-fb.hidden=false;$("wa").href="https://wa.me/"+NO+"?text="+encodeURIComponent(m);$("pesan").value=m;$("salin").textContent=tt("copy");
-fb.scrollIntoView({behavior:rm?"auto":"smooth",block:"center"});try{$("wa").click()}catch(e){}
+var url="https://wa.me/"+NO+"?text="+encodeURIComponent(m);
+window.open(url,"_blank");
 };
 var m0="";try{m0=localStorage.getItem(KEY)||""}catch(e){}
 if(m0!=="local"&&m0!=="intl"){m0="";try{var d=JSON.parse(localStorage.getItem("aby-draft-v1")||"null");if(d&&d.items&&d.items.length)m0="local"}catch(e){}}
